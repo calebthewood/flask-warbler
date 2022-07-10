@@ -1,7 +1,6 @@
 """SQLAlchemy models for Warbler."""
 
 from datetime import datetime
-from readline import set_completion_display_matches_hook
 
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
