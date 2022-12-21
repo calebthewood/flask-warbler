@@ -311,15 +311,15 @@ nav + .container {
   color: #657786;
 }
 
-.list-group-item .like-area {
+#messages .message-btns .message-btn {
+  display: inline-block;
   position: relative;
-  float: right;
-  z-index: 2;
-  align-self: flex-end;
 }
 
-
-
+#messages .message-btns {
+  display: flex;
+  justify-content: space-between;
+}
 
 /* ==================== User cards on follower/following pages */
 
@@ -403,6 +403,7 @@ p.card-bio {
   margin: 2em 10px 0;
 }
 
+
 /* ============================ Signed out home */
 
 .home-hero {
@@ -445,6 +446,7 @@ p.card-bio {
   bottom: 0;
   background: rgba(255, 255, 255, 0.3);
 }
+
 
 /* ============================== Signed in Home */
 
@@ -520,7 +522,7 @@ p.card-bio {
 #messages.no-hover .message-heading {
   display: flex;
   justify-content: space-between;
-  height: 47px;
+  height: 30px;
   margin-top: 3px;
 }
 
@@ -543,10 +545,10 @@ p.card-bio {
 }
 
 .single-message {
-  font-size: 27px;
-  line-height: 32px;
+  font-size: 16px;
+  line-height: 18px;
   letter-spacing: 0.01em;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 /* ================================ 404 page */
