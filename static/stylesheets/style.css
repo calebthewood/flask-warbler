@@ -530,6 +530,10 @@ p.card-bio {
   min-width: 105px;
 }
 
+.message-area {
+  width: 100%;
+}
+
 .messages-like {
   position: absolute;
   top: 4px;
