@@ -61,17 +61,15 @@
             <p class="single-message">{{ msg.text }}</p>
           </div>
 
-          {% if g.user %}
           <div class="message-btns">
 
-
-              {% if g.user in msg.users_liked %}
-              <form method="POST" action="/messages/{{ msg.user.id }}/unlike" class="message-btn">
-                <button title="Like" class="btn btn-sm btn-primary "><i class="fas fa-thumbs-up"></i></button>
-              </form>
+            {% if g.user in msg.users_liked %}
+            <form method="POST" action="/messages/{{ msg.user.id }}/like" class="message-btn">
+              <button title="Unlike" class="btn btn-sm btn-outline-primary"><i class="fas fa-thumbs-up"></i></button>
+            </form>
               {% else %}
-              <form method="POST" action="/messages/{{ msg.user.id }}/like" class="message-btn">
-                <button title="Unlike" class="btn btn-sm btn-outline-primary"><i class="far fa-thumbs-up"></i></button>
+              <form method="POST" action="/messages/{{ msg.user.id }}/unlike" class="message-btn">
+                <button title="Like" class="btn btn-sm btn-primary "><i class="far fa-thumbs-up"></i></button>
               </form>
               {% endif %}
 
@@ -93,10 +91,8 @@
               </form>
               {% endif %}
 
-
-
           </div>
-          {% endif %}
+
         </div>
       </li>
       {% endfor %}
