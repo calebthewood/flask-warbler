@@ -314,6 +314,7 @@ nav + .container {
 #messages .message-btns .message-btn {
   display: inline-block;
   position: relative;
+  z-index: 2;
 }
 
 #messages .message-btns {
