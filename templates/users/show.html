@@ -13,29 +13,47 @@
           </a>
 
           <div class="message-area">
-            <a href="/users/{{ user.id }}">@{{ user.username }}</a>
-            <span class="text-muted">
-              {{ message.timestamp.strftime('%d %B %Y') }}
-            </span>
-            <p>{{ message.text }}</p>
-          </div>
+            <div class="message-heading">
+              <a href="/users/{{ message.user.id }}">@{{ message.user.username }}</a>
+              <span class="text-muted">{{ message.timestamp.strftime('%d %B %Y') }}</span>
+            </div>
 
-          <!-- TODO: reverse thumbs ups -->
-        {% if g.user in message.users_liked %}
-          <form
-              method="POST"
-              action="/messages/{{ message.id }}/unlike"
-              class="like-area">
-            <button class="btn btn-info btn-sm"><i class="fas fa-thumbs-up"></i></button>
-          </form>
-        {% else %}
-          <form
-            method="POST"
-            action="/messages/{{ message.id }}/like"
-            class="like-area">
-            <button class="btn btn-outline-info btn-sm"><i class="far fa-thumbs-up"></i></button>
-          </form>
-        {% endif %}
+            <div class="message-body">
+              <p class="single-message">{{ message.text }}</p>
+            </div>
+
+            {% if g.user %}
+            <div class="message-btns">
+              {% if g.user in message.users_liked %}
+              <form method="POST" action="/messages/{{ message.id }}/unlike" class="message-btn">
+                <button title="Like" class="btn btn-sm btn-primary "><i class="fas fa-thumbs-up"></i></button>
+              </form>
+              {% else %}
+              <form method="POST" action="/messages/{{ message.id }}/like" class="message-btn">
+                <button title="Unlike" class="btn btn-sm btn-outline-primary"><i class="far fa-thumbs-up"></i></button>
+              </form>
+              {% endif %}
+
+              <form method="#" action="#" class="message-btn">
+                <button disabled title="Feature under construction" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-comment-slash"></i></button>
+              </form>
+
+              {% if g.user.id == message.user.id %}
+              <form method="POST" action="/messages/{{ message.id }}/delete" class="message-btn">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-regular fa-trash-can"></i></button>
+              </form>
+              {% elif g.user.is_following(message.user) %}
+              <form method="POST" action="/users/stop-following/{{ message.user.id }}">
+                <button class="btn btn-sm btn-primary"><i class="fa-solid fa-user-check"></i></button>
+              </form>
+              {% else %}
+              <form method="POST" action="/users/follow/{{ message.user.id }}" class="message-btn">
+                <button class="btn btn-sm btn-outline-primary btn-sm"><i class="fa-solid fa-user-plus"></i></button>
+              </form>
+              {% endif %}
+
+            </div>
+            {% endif %}
 
         </li>
 
