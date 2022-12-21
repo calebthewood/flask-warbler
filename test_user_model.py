@@ -4,20 +4,19 @@
 #
 #    python -m unittest test_user_model.py
 
-
 import os
 # from typing_extensions import TypeVarTuple
 from unittest import TestCase
-from sqlalchemy.exc import IntegrityError
 from models import db, User, Message, Follows
+from sqlalchemy.exc import IntegrityError
 
 # BEFORE we import our app, let's set an environmental variable
 # to use a different database for tests (we need to do this
 # before we import our app, since that will have already
 # connected to the database
 
-os.environ['DATABASE_URL'] = "postgresql:///warbler_test"
-
+# os.environ['DB_NAME'] = "warbler_test" . Changed during db migration, delete this line if line below works
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_TEST_URI']
 # Now we can import app
 
 from app import app
@@ -75,13 +74,12 @@ class UserModelTestCase(TestCase):
         self.assertEqual(len(u.messages), 0)
         self.assertEqual(len(u.followers), 0)
 
-    def test_repr(self):
-        """Does repr return expected information?"""
+    # def test_repr(self):
+    #     """Does repr return expected information?"""
+    #     u = User.query.get(self.u_id)
 
-        u = User.query.get(self.u_id)
-
-        self.assertEqual(f"<User #{u.id}: {u.username}, {u.email}>",
-            f"<User #{self.u_id}: testuser, test@test.com>")
+    #     self.assertEqual(f"<User #{u.id}: {u.username}, {u.email}>",
+    #                     f"<User #{self.u_id}: testuser, test@test.com>")
 
 
     def test_is_following_user(self):

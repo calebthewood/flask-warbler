@@ -29,7 +29,6 @@ class UserEditForm(FlaskForm):
     password = PasswordField('Enter password to confirm changes', validators=[Length(min=6)])
 
 
-
 class LoginForm(FlaskForm):
     """Login form."""
 

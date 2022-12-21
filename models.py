@@ -1,13 +1,11 @@
 """SQLAlchemy models for Warbler."""
 
 from datetime import datetime
-
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
-
 
 class Follows(db.Model):
     """Connection of a follower <-> followed_user."""
@@ -108,15 +106,15 @@ class User(db.Model):
     liked_messages = db.relationship(
         "Message",
         secondary="likes",
-        backref="users_liked"
-    )
+        backref="users_liked")
 
 
     def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
 
+
     def is_followed_by(self, other_user):
-        """Is this user followed by `other_user`?"""
+        """Is this user followed by 'other_user'?"""
 
         found_user_list = [user for user in self.followers if user == other_user]
         return len(found_user_list) == 1
@@ -206,6 +204,5 @@ def connect_db(app):
 
     You should call this in your Flask app.
     """
-
     db.app = app
     db.init_app(app)
