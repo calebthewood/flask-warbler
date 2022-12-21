@@ -9,7 +9,7 @@ from models import db, User, Message, Follows
 # before we import our app, since that will have already
 # connected to the database
 
-os.environ['DB_NAME'] = "warbler_test"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_TEST_URI']
 
 # Now we can import app
 

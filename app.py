@@ -1,10 +1,7 @@
 import os
-
 from flask import Flask, render_template, request, flash, redirect, session, g
 #from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
-from utils import generate_db_url
-
 from forms import CSRFProtectForm, UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, User, Message
 
@@ -23,7 +20,6 @@ app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 
 connect_db(app)
 db.create_all()
-
 
 ##############################################################################
 # User signup/login/logout
