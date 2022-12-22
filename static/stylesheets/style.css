@@ -575,3 +575,37 @@ p.card-bio {
 .message-404 input {
   flex: 1;
 }
+
+/* ================================ SVG Icons */
+
+svg.icon {
+  height: 16px;
+  width: auto;
+  fill: #6c757d;
+  padding-bottom: 2px;
+}
+
+button.like:hover .icon {
+  fill: #0d6efd
+}
+
+button.unlike > .icon{
+  fill: #0d6efd
+}
+
+.unlike:hover .icon {
+  fill: #495057
+}
+
+button.delete:hover .icon{
+  fill: #dc3545;
+}
+
+button.follow:hover .icon {
+  fill: #0d6efd
+}
+
+button.unfollow:hover .icon {
+  fill: #dc3545
+}
+
