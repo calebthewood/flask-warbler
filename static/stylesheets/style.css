@@ -319,7 +319,7 @@ nav + .container {
 
 #messages .message-btns {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 /* ==================== User cards on follower/following pages */
