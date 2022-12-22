@@ -9,36 +9,35 @@
     <div class="row justify-content-end">
       <div class="col-9">
         <ul class="user-stats nav nav-pills">
+
           <li class="stat">
-            <p class="small">Messages</p>
-            <h4>
-              <a href="/users/{{ user.id }}">{{ user.messages | length }}</a>
-            </h4>
+            <a href="/users/{{ user.id }}"  class="btn btn-sm btn-light">
+              Messages <span class="badge bg-secondary">{{ user.messages | length }}</span>
+            </a>
           </li>
+
           <li class="stat">
-            <p class="small">Following</p>
-            <h4>
-              <a href="/users/{{ user.id }}/following">{{ user.following | length }}</a>
-            </h4>
+            <a href="/users/{{ user.id }}/following"  class="btn btn-sm btn-light">
+              Following <span class="badge bg-secondary">{{ user.following | length }}</span>
+            </a>
           </li>
+
           <li class="stat">
-            <p class="small">Followers</p>
-            <h4>
-              <a href="/users/{{ user.id }}/followers">{{ user.followers | length }}</a>
-            </h4>
+            <a href="/users/{{ user.id }}/followers"  class="btn btn-sm btn-light">
+              Followers <span class="badge bg-secondary">{{ user.followers | length }}</span>
+            </a>
           </li>
+
           <li class="stat">
-            <p class="small">Likes</p>
-            <h4>
-              <a href="/users/{{ user.id }}/liked-messages">{{ user.liked_messages | length }} </a>
-            </h4>
+            <a href="/users/{{ user.id }}/liked-messages"  class="btn btn-sm btn-light">
+              Likes <span class="badge bg-secondary">{{ user.liked_messages | length }} </span>
+            </a>
           </li>
+
           <div class="ms-auto">
             {% if g.user.id == user.id %}
-            <a href="/users/profile" class="btn btn-outline-secondary">Edit Profile</a>
-            <form method="POST" action="/users/delete">
-              <button class="btn btn-outline-danger ms-2">Delete Profile</button>
-            </form>
+            <a href="/users/profile" class="btn btn-sm btn-outline-secondary">Edit Profile</a>
+
             {% elif g.user %}
             {% if g.user.is_following(user) %}
             <form method="POST" action="/users/stop-following/{{ user.id }}">
