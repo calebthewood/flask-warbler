@@ -66,15 +66,16 @@
   </nav>
 
   <div class="container">
-
     {% for category, message in get_flashed_messages(with_categories=True) %}
     <div class="alert alert-{{ category }}">{{ message }}</div>
     {% endfor %}
 
     {% block content %}
     {% endblock %}
-
   </div>
+
+  <script src="{{ url_for('static', filename='/javascript/icons.js')}}"></script>
+  <script src="{{ url_for('static', filename='/javascript/index.js')}}"></script>
 </body>
 
 </html>
