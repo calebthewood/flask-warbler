@@ -311,7 +311,7 @@ nav + .container {
   color: #657786;
 }
 
-#messages .message-btns .message-btn {
+#messages .message-btns {
   display: inline-block;
   position: relative;
   z-index: 2;
@@ -319,7 +319,8 @@ nav + .container {
 
 #messages .message-btns {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  max-width: 300px;
 }
 
 /* ==================== User cards on follower/following pages */
@@ -583,6 +584,7 @@ svg.icon {
   width: auto;
   fill: #6c757d;
   padding-bottom: 2px;
+  pointer-events: none;
 }
 
 button.like:hover .icon {
