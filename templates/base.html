@@ -56,7 +56,7 @@
         <li>
           <form id="CSRFProtectForm" action="/logout" method="POST">
             {{ g.csrf_form.hidden_tag() }}
-            <button class="btn-link btn"><a>Log out</a></button>
+            <a id="logout"></a><button class="btn-link btn">Log out</button></a>
           </form>
         </li>
         {% endif %}
