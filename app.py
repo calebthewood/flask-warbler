@@ -126,9 +126,6 @@ def logout():
     return redirect("/")
 
 
-
-
-
 ##############################################################################
 # General user routes:
 
@@ -197,8 +194,6 @@ def users_liked_messages(user_id):
     return render_template('users/liked-messages.html', user=user)
 
 
-
-
 @app.post('/users/follow/<int:follow_id>')
 def add_follow(follow_id):
     """Add a follow for the currently-logged-in user."""
@@ -262,8 +257,6 @@ def profile():
     return render_template('users/edit.html', form=form)
 
 
-
-
 @app.post('/users/delete')
 def delete_user():
     """Delete user."""
@@ -278,7 +271,6 @@ def delete_user():
     db.session.commit()
 
     return redirect("/signup")
-
 
 
 ##############################################################################
@@ -330,7 +322,6 @@ def messages_destroy(message_id):
     return redirect(f"/users/{g.user.id}")
 
 
-
 @app.post('/messages/<int:message_id>/like')
 def add_like(message_id):
     """Have current user like this message."""
@@ -361,11 +352,8 @@ def remove_like(message_id):
     return redirect("/")
 
 
-
-
 ##############################################################################
 # Homepage and error pages
-
 
 @app.get('/')
 def homepage():
