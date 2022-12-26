@@ -29,6 +29,7 @@ db.create_all()
 def add_csrf_form():
     """Adds CSRF Form"""
     g.csrf_form = CSRFProtectForm()
+    g.message_form = MessageForm()
 
 
 @app.before_request

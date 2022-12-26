@@ -13,7 +13,6 @@
 
   <link rel="stylesheet" href="/static/stylesheets/style.css">
   <link rel="shortcut icon" href="/static/favicon.ico">
-
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
@@ -29,7 +28,6 @@
       </div>
 
       <ul class="nav navbar-nav navbar-right">
-
         {% block searchbox %}
         <li>
           <form class="navbar-form navbar-right" action="/users">
@@ -50,9 +48,9 @@
             <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
           </a>
         </li>
-        <li><a href="/messages/new">New Message</a></li>
-
-
+        <li><!-- Button trigger modal -->
+          <a class="btn-link btn" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">New Message</a>
+        </li>
         <li>
           <form id="CSRFProtectForm" action="/logout" method="POST">
             {{ g.csrf_form.hidden_tag() }}
@@ -60,7 +58,6 @@
           </form>
         </li>
         {% endif %}
-
       </ul>
     </div>
   </nav>
@@ -72,6 +69,38 @@
 
     {% block content %}
     {% endblock %}
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade mt-5" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Write a Message</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="/messages/new">
+          <div class="modal-body">
+            {{ g.message_form.csrf_token }}
+            <div>
+              {% if g.message_form.text.errors %}
+              {% for error in g.message_form.text.errors %}
+              <span class="text-danger">
+                {{ error }}
+              </span>
+              {% endfor %}
+              {% endif %}
+              {{ g.message_form.text(placeholder="What's happening?", class="form-control", rows="3") }}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-outline-success">Warble!</button>
+        </form>
+      </div>
+    </div>
+  </div>
   </div>
 
   <script src="{{ url_for('static', filename='/javascript/icons.js')}}"></script>
