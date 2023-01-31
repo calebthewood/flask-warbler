@@ -144,9 +144,9 @@ Security:
 ## Roadmap
 
 - [ ] Custom 404 page
-- [ ] Add AJAX
-    - [ ] liking a warble
-    - [ ] post msg modal
+- [x] Add AJAX
+    - [x] liking a warble
+    - [x] post msg modal
 - [ ] DRY up things
     - [ ] Templates
     - [ ] Authorization
