@@ -42,6 +42,7 @@ class Like(db.Model):
         primary_key=True,
     )
 
+
 class User(db.Model):
     """User in the system."""
 
