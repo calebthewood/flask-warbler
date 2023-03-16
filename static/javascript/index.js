@@ -17,7 +17,7 @@ async function handleBtns(event) {
   if (event.target.tagName === 'BUTTON') {
     const endpoint = event.target?.getAttribute('data-endpoint');
     const { classList } = event.target;
-    // Update Button's classlist
+    // Update Button's classlist for like/unlike, remove delete msg
     if (classList.contains("like")) {
       event.target.classList.replace("like", "unlike");
     } else if (classList.contains("unlike")) {
