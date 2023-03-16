@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, HiddenField
 from wtforms.validators import DataRequired, Email, Length, Optional
 
 
@@ -8,6 +8,7 @@ class MessageForm(FlaskForm):
 
     text = TextAreaField('text', validators=[DataRequired(),
                                     Length(min=(1),max=(140))])
+    parent_id = HiddenField('parent_id', validators=[Optional()])
 
 
 class UserAddForm(FlaskForm):

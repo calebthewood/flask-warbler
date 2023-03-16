@@ -293,7 +293,7 @@ def messages_add():
         msg = Message(text=form.text.data)
         g.user.messages.append(msg)
         db.session.commit()
-
+        # breakpoint()
         return redirect(f"/users/{g.user.id}")
 
     return render_template('messages/new.html', form=form)
@@ -303,7 +303,13 @@ def messages_add():
 def messages_show(message_id):
     """Show a message."""
 
+    # breakpoint()
     msg = Message.query.get(message_id)
+    replies = Message.query.filter_by(parent_id=message_id).all()
+
+    if len(replies) > 0:
+        msg["replies"] = replies
+
     return render_template('messages/show.html', message=msg)
 
 

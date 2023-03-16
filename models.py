@@ -192,6 +192,11 @@ class Message(db.Model):
         nullable=False,
     )
 
+    parent_id = db.Column(
+        db.Integer,
+        nullable=True
+    )
+
     user = db.relationship('User')
 
     def __repr__(self):
