@@ -2,9 +2,9 @@
 
 console.log("Icons by Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.");
 // Select the div containing message related buttons
-const messages = document.getElementById('messages');
-const userProfileBtns = document.getElementById('user-profile-btns');
-const followingBtn = document.getElementById('following-btns');
+const messages = document?.getElementById('messages');
+const userProfileBtns = document?.getElementById('user-profile-btns');
+const followingBtn = document?.getElementById('following-btns');
 
 // Handle Clicks on (un)like/(un)follow buttons
 if (messages) messages.addEventListener('click', handleBtns);
@@ -15,7 +15,7 @@ if (followingBtn) followingBtn.addEventListener('click', handleBtns);
 async function handleBtns(event) {
   console.log("Handle Buttons");
   if (event.target.tagName === 'BUTTON') {
-    const endpoint = event.target.getAttribute('data-endpoint');
+    const endpoint = event.target?.getAttribute('data-endpoint');
     const { classList } = event.target;
     // Update Button's classlist
     if (classList.contains("like")) {
@@ -28,17 +28,18 @@ async function handleBtns(event) {
     } else if (classList.contains("unfollow")) {
       event.target.classList.replace("unfollow", "follow");
       event.target.innerHTML = icons.follow;
+    } else if (classList.contains("delete")) {
+      event.target.closest('li').remove()
     }
     event.target.setAttribute('data-endpoint', toggleEndpoint(endpoint));
 
     try {
-      const response = await fetch(endpoint, {
+      await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      console.log("Action Handler Response: ", response);
     } catch (error) {
       console.error(error);
     }
@@ -55,6 +56,7 @@ async function handleBtns(event) {
  */
 function toggleEndpoint(endpoint) {
   const params = endpoint.split("/");
+  console.log("PARAMS: ", params);
   if (params[1] === "users") {
     params[2] = params[2] == "follow" ? "stop-following" : "follow";
   } else {
