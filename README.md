@@ -62,7 +62,7 @@
 ## About The Project
 
 
-Warbler is a paired-down twitter clone I developed at Rithm School with another student over the course of a 3 day sprint. The skeleton of the app was provided by the school staff. Our primary goal was to implement the database tables and relationships needed to support users, follows, likes, and messages. We implemented additional interactive features to the front end.
+Warbler is a paired-down twitter clone I developed while attending Rithm School. The a non-functional skeleton of the app was provided, and my primary goal was to implement the database tables and relationships needed to support users, follows, likes, and messages. Since then I've continued to add to and refine the app.
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
