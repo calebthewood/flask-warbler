@@ -64,6 +64,7 @@
 
 Warbler is a paired-down twitter clone I developed while attending Rithm School. The a non-functional skeleton of the app was provided, and my primary goal was to implement the database tables and relationships needed to support users, follows, likes, and messages. Since then I've continued to add to and refine the app.
 
+I migrated the database from a Heroku Hobby Dyno to an RDS instance. I revamped buttons in the app to add AJAX and make them reactive. Currently, I'm working on adding a comments system to allow commenting on a message.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
