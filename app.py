@@ -1,9 +1,9 @@
 import os
 from flask import Flask, render_template, request, flash, redirect, session, g
-#from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from forms import CSRFProtectForm, UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, User, Message
+#from flask_debugtoolbar import DebugToolbarExtension
 
 CURR_USER_KEY = "curr_user"
 
@@ -14,8 +14,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
-#app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 # toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
@@ -27,7 +27,7 @@ db.create_all()
 
 @app.before_request
 def add_csrf_form():
-    """Adds CSRF Form"""
+    """Makes a new CSRF form available before each request"""
     g.csrf_form = CSRFProtectForm()
     g.message_form = MessageForm()
 
@@ -84,7 +84,6 @@ def signup():
             return render_template('users/signup.html', form=form)
 
         do_login(user)
-
         return redirect("/")
 
     else:
@@ -115,8 +114,6 @@ def login():
 def logout():
     """Handle logout of user."""
 
-    # Bug was a link rather than form
-    #save to g rather than user.
     form = g.csrf_form
 
     if form.validate_on_submit():
@@ -131,11 +128,14 @@ def logout():
 
 @app.get('/users')
 def list_users():
-    """Page with listing of users.
+    """Return a page with a listing of users.
 
-    Can take a 'q' param in querystring to search by that username.
+    If a 'q' parameter is provided in the query string, the function
+    will search for usernames containing that parameter.
+
+    Returns:
+        str: The HTML for the users listing page.
     """
-    #breakpoint()
 
     search = request.args.get('q')
 
@@ -149,8 +149,18 @@ def list_users():
 
 
 @app.get('/users/<int:user_id>')
-def users_show(user_id):
-    """Show user profile."""
+def users_show(user_id: int) -> str:
+    """Show a user's profile.
+
+    Retrieves the user with the given ID from the database and renders
+    their profile page.
+
+    Args:
+        user_id (int): The ID of the user to show.
+
+    Returns:
+        str: The HTML for the user's profile page.
+    """
 
     user = User.query.get_or_404(user_id)
 
@@ -158,8 +168,18 @@ def users_show(user_id):
 
 
 @app.get('/users/<int:user_id>/following')
-def show_following(user_id):
-    """Show list of people this user is following."""
+def show_following(user_id: int) -> str:
+    """Show the list of people that a user is following.
+
+    If the current user is not authenticated, this function will flash an
+    error message and redirect to the homepage.
+
+    Args:
+        user_id (int): The ID of the user to show the following list for.
+
+    Returns:
+        str: The HTML for the list of people the user is following or 404.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -170,8 +190,18 @@ def show_following(user_id):
 
 
 @app.get('/users/<int:user_id>/followers')
-def users_followers(user_id):
-    """Show list of followers of this user."""
+def users_followers(user_id: int) -> str:
+    """Show the list of followers for a user.
+
+    If the current user is not authenticated, this function will flash an
+    error message and redirect to the homepage.
+
+    Args:
+        user_id (int): The ID of the user to show the followers for.
+
+    Returns:
+        str: The HTML for the list of followers of the user or 404.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -183,9 +213,18 @@ def users_followers(user_id):
 
 
 @app.get('/users/<int:user_id>/liked-messages')
-def users_liked_messages(user_id):
-    """Show a User's liked messages"""
+def users_liked_messages(user_id: int) -> str:
+    """Show the messages that a user has liked.
 
+    If the current user is not authenticated, this function will flash an
+    error message and redirect to the homepage.
+
+    Args:
+        user_id (int): The ID of the user to show the liked messages for.
+
+    Returns:
+        str: The HTML for the list of messages that the user has liked or 404.
+    """
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -195,9 +234,18 @@ def users_liked_messages(user_id):
 
 
 @app.post('/users/follow/<int:follow_id>')
-def add_follow(follow_id):
-    """Add a follow for the currently-logged-in user."""
+def add_follow(follow_id: int) -> str:
+    """Add a follow for the currently logged-in user.
 
+    If the current user is not authenticated, this function will flash an
+    error message and redirect to the homepage.
+
+    Args:
+        follow_id (int): The ID of the user to add a follow for.
+
+    Returns:
+        str: A redirect to the page showing the current user's list of followed users or 404.
+    """
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -210,8 +258,18 @@ def add_follow(follow_id):
 
 
 @app.post('/users/stop-following/<int:follow_id>')
-def stop_following(follow_id):
-    """Have currently-logged-in-user stop following this user."""
+def stop_following(follow_id: int) -> str:
+    """Have the currently logged-in user stop following another user.
+
+    If the current user is not authenticated, this function will flash an
+    error message and redirect to the homepage.
+
+    Args:
+        follow_id (int): The ID of the user to stop following.
+
+    Returns:
+        str: A redirect to the page showing the current user's list of followed users.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -223,11 +281,23 @@ def stop_following(follow_id):
 
     return redirect(f"/users/{g.user.id}/following")
 
-#EDIT USER
+
 @app.route('/users/profile', methods=["GET", "POST"])
 def profile():
-    """Update profile for current user."""
+    """Render user profile edit page, allowing the user to update their profile information.
 
+    If the current user is not logged in, redirect them to the home page.
+
+    GET: Render the user edit form.
+
+    POST: If the form passes validation, update the user's profile and redirect to their profile page. If the password
+    entered does not match the user's current password, flash a message and redirect to the edit page.
+
+    Returns:
+        If a GET request is made, render the user edit form. If a POST request is made and the form passes validation,
+        redirect to the user's profile page.
+
+    """
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -235,21 +305,13 @@ def profile():
     form = UserEditForm(obj=g.user)
 
     if form.validate_on_submit():
-
         password = form.password.data
-        curr_username = g.user.username
-        if User.authenticate(curr_username, password):
+        current_username = g.user.username
 
-            g.user.username = form.username.data
-            g.user.email = form.email.data
-            g.user.image_url = form.image_url.data
-            g.user.header_image_url = form.header_image_url.data
-            g.user.bio = form.bio.data
-
+        if User.authenticate(current_username, password):
+            form.populate_obj(g.user)
             db.session.commit()
-
             return redirect(f"/users/{g.user.id}")
-
         else:
             flash("Access unauthorized.", "danger")
             return redirect("/")
@@ -259,14 +321,23 @@ def profile():
 
 @app.post('/users/delete')
 def delete_user():
-    """Delete user."""
+    """Delete the current user from the database.
+
+    If no user is logged in, flash a message saying that the access is unauthorized
+    and redirect to the home page.
+
+    Logs out the user and removes the user object from the database before
+    redirecting to the signup page.
+
+    Returns:
+        A redirect response to the signup page.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
     do_logout()
-
     db.session.delete(g.user)
     db.session.commit()
 
