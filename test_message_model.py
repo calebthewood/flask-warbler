@@ -1,19 +1,17 @@
 """Test message model."""
 import os
-from dotenv import load_dotenv
 from unittest import TestCase
 from models import db, User, Message, Follows, Like
+from app import app
 
 # set an environmental variable BEFORE we import our app,
 # to use a different database for tests. Do this
 # before we import app, since that will have already
 # connected to the database
-load_dotenv()
 # app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///warbler_test"
 # os.environ['DB_URI'] = "postgresql:///warbler_test"
 # Now we can import app
 
-from app import app
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_TEST_URI']
 
 # Create our tables (we do this here, so we only create the tables
