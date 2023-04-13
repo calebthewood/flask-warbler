@@ -28,6 +28,7 @@ db.create_all()
 @app.before_request
 def add_csrf_form():
     """Makes a new CSRF form available before each request"""
+
     g.csrf_form = CSRFProtectForm()
     g.message_form = MessageForm()
 
@@ -99,12 +100,10 @@ def login():
     if form.validate_on_submit():
         user = User.authenticate(form.username.data,
                                  form.password.data)
-
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
             return redirect("/")
-
         flash("Invalid credentials.", 'danger')
 
     return render_template('users/login.html', form=form)
@@ -163,7 +162,6 @@ def users_show(user_id: int) -> str:
     """
 
     user = User.query.get_or_404(user_id)
-
     return render_template('users/show.html', user=user)
 
 
@@ -225,6 +223,7 @@ def users_liked_messages(user_id: int) -> str:
     Returns:
         str: The HTML for the list of messages that the user has liked or 404.
     """
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -246,6 +245,7 @@ def add_follow(follow_id: int) -> str:
     Returns:
         str: A redirect to the page showing the current user's list of followed users or 404.
     """
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -298,6 +298,7 @@ def profile():
         redirect to the user's profile page.
 
     """
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -349,9 +350,15 @@ def delete_user():
 
 @app.route('/messages/new', methods=["GET", "POST"])
 def messages_add():
-    """Add a message:
+    """Add a new message:
 
-    Show form if GET. If valid, update message and redirect to user page.
+    GET: Display a form to add a new message.
+    POST: Process the submitted form. If the form is valid, add the message to the user's list
+    of messages and redirect to the user's page.
+
+    Returns:
+        If GET: A rendered template with a form to add a new message.
+        If POST: A redirect to the user's page if the form is valid.
     """
 
     if not g.user:
@@ -370,10 +377,16 @@ def messages_add():
 
 
 @app.get('/messages/<int:message_id>')
-def messages_show(message_id):
-    """Show a message."""
+def messages_show(message_id: int) -> str:
+    """Display the message with the given message ID.
 
-    # breakpoint()
+    Args:
+        message_id (int): The ID of the message to display.
+
+    Returns:
+        A Flask template with the details of the message and any replies to it.
+    """
+
     msg = Message.query.get(message_id)
     replies = Message.query.filter_by(parent_id=message_id).all()
 
@@ -384,8 +397,14 @@ def messages_show(message_id):
 
 
 @app.post('/messages/<int:message_id>/delete')
-def messages_destroy(message_id):
-    """Delete a message."""
+def messages_destroy(message_id: int) -> str:
+    """Delete a message.
+
+    Only authorized users can delete messages. If the user is not logged in, they
+    are redirected to the homepage. Otherwise, the message with the given ID is
+    retrieved from the database and deleted. After deletion, the user is redirected
+    to their profile page.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -394,13 +413,25 @@ def messages_destroy(message_id):
     msg = Message.query.get(message_id)
     db.session.delete(msg)
     db.session.commit()
-
     return redirect(f"/users/{g.user.id}")
 
 
 @app.post('/messages/<int:message_id>/like')
 def add_like(message_id):
-    """Have current user like this message."""
+    """Add a like for the current user to the specified message.
+
+    If the current user is not logged in, redirect to the homepage with a "danger" flash message.
+    Otherwise, add a like from the current user to the specified message and redirect to the homepage.
+
+    Args:
+        message_id (int): The ID of the message to like.
+
+    Returns:
+        redirect: A redirect to the homepage.
+
+    Raises:
+        404: If the specified message is not found in the database.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -409,13 +440,16 @@ def add_like(message_id):
     message = Message.query.get_or_404(message_id)
     g.user.liked_messages.append(message)
     db.session.commit()
-
     return redirect("/")
 
 
 @app.post('/messages/<int:message_id>/unlike')
 def remove_like(message_id):
-    """Have current user unlike this message."""
+    """Remove a like from a message for the currently logged-in user.
+
+    Returns:
+        A redirect to the home page.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -433,26 +467,26 @@ def remove_like(message_id):
 
 @app.get('/')
 def homepage():
-    """Show homepage:
+    """Show the homepage.
 
-    - anon users: no messages
-    - logged in: 100 most recent messages of followed_users
+    If the user is logged in, this view will display the 100 most recent messages
+    posted by the current user's followed users and the current user. If the user
+    is not logged in, the view will display a page with no messages.
+
+    Returns:
+        If the user is logged in, returns a template that displays messages.
+        If the user is not logged in, returns a template that does not display messages.
     """
-
     if g.user:
-
         user_ids = [ user.id for user in g.user.following ]
         user_ids.append(g.user.id)
-
         messages = (Message
                     .query
                     .filter( Message.user_id.in_(user_ids) )
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
-
         return render_template('home.html', messages=messages)
-
     else:
         return render_template('home-anon.html')
 
