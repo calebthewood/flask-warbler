@@ -1,6 +1,7 @@
 """SQLAlchemy models for Warbler."""
 
 from datetime import datetime
+
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
@@ -14,31 +15,31 @@ class Follows(db.Model):
 
     user_being_followed_id = db.Column(
         db.Integer,
-        db.ForeignKey('users.id', ondelete="cascade"),
+        db.ForeignKey('users.id', ondelete='CASCADE'),
         primary_key=True,
     )
 
     user_following_id = db.Column(
         db.Integer,
-        db.ForeignKey('users.id', ondelete="cascade"),
+        db.ForeignKey('users.id', ondelete='CASCADE'),
         primary_key=True,
     )
 
 #TODO: make plural
 class Like(db.Model):
-    """An individual liked warble. """
+    """Join table between users and messages (the join represents a like)."""
 
     __tablename__ = 'likes'
 
     user_id= db.Column(
         db.Integer,
-        db.ForeignKey('users.id', ondelete="cascade"),
+        db.ForeignKey('users.id', ondelete='CASCADE'),
         primary_key=True,
     )
 
     message_id = db.Column(
         db.Integer,
-        db.ForeignKey('messages.id', ondelete="cascade"),
+        db.ForeignKey('messages.id', ondelete='CASCADE'),
         primary_key=True,
     )
 
@@ -93,6 +94,7 @@ class User(db.Model):
     followers = db.relationship(
         "User",
         secondary="follows",
+        overlaps="followers",
         primaryjoin=(Follows.user_being_followed_id == id),
         secondaryjoin=(Follows.user_following_id == id)
     )
@@ -100,6 +102,7 @@ class User(db.Model):
     following = db.relationship(
         "User",
         secondary="follows",
+        overlaps="followers",
         primaryjoin=(Follows.user_following_id == id),
         secondaryjoin=(Follows.user_being_followed_id == id)
     )
@@ -198,7 +201,7 @@ class Message(db.Model):
         nullable=True
     )
 
-    user = db.relationship('User')
+    user = db.relationship('User', overlaps="messages")
 
     def __repr__(self):
         return f"<Message #{self.id}: {self.text}. Written by: {self.user.username}>"
@@ -207,8 +210,6 @@ class Message(db.Model):
 
 def connect_db(app):
     """Connect this database to provided Flask app.
-
-    You should call this in your Flask app.
     """
     db.app = app
     db.init_app(app)

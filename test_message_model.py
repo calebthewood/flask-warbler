@@ -1,19 +1,20 @@
 """Test message model."""
 import os
-# from typing_extensions import TypeVarTuple
+from dotenv import load_dotenv
 from unittest import TestCase
-from models import db, User, Message, Follows
+from models import db, User, Message, Follows, Like
 
-# BEFORE we import our app, let's set an environmental variable
-# to use a different database for tests (we need to do this
-# before we import our app, since that will have already
+# set an environmental variable BEFORE we import our app,
+# to use a different database for tests. Do this
+# before we import app, since that will have already
 # connected to the database
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_TEST_URI']
-
+load_dotenv()
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///warbler_test"
+# os.environ['DB_URI'] = "postgresql:///warbler_test"
 # Now we can import app
 
 from app import app
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_TEST_URI']
 
 # Create our tables (we do this here, so we only create the tables
 # once for all tests --- in each test, we'll delete the data
@@ -21,98 +22,64 @@ from app import app
 
 db.create_all()
 
-
 class MessageModelTestCase(TestCase):
-    """Test views for messages."""
+    """Test for message model."""
 
     def setUp(self):
         """Create test client, add sample data."""
+        db.drop_all()
+        db.create_all()
 
-        User.query.delete()
-        Message.query.delete()
-        Follows.query.delete()
+        self.uid = 94566
+        u = User.signup("testing", "testing@test.com", "password", None)
+        u.id = self.uid
+        db.session.commit()
+
+        self.u = User.query.get(self.uid)
 
         self.client = app.test_client()
 
-        u = User.signup(
-            email="test@test.com",
-            username="testuser",
-            password="HASHED_PASSWORD",
-            image_url=""
-        )
-
-        u2 = User.signup(
-            email="test2@test.com",
-            username="testuser2",
-            password="HASHED_PASSWORD2",
-            image_url=""
-        )
-
-
-        db.session.add_all([u,u2])
-        db.session.commit()
-
-        u.messages.append(
-            Message(text="This is test msg one.")
-        )
-
-        u2.messages.append(
-            Message(text="This is test msg two.")
-        )
-
-        db.session.commit()
-
-        self.test_msg1 = u.messages[0]
-        self.test_msg2 = u2.messages[0]
-
-        self.u_id = u.id
-        self.u2_id = u2.id
-
     def tearDown(self):
-        """Remove all session commits."""
+        res = super().tearDown()
         db.session.rollback()
+        return res
 
-    def test_msg_repr(self):
-        """Does repr return expected message."""
+    def test_message_model(self):
+        """Does basic model work?"""
 
-        u = User.query.get(self.u_id)
-        msg = u.messages[0]
-
-        self.assertEqual(f"<Message #{msg.id}: {msg.text} Written by: {msg.user.username}>",
-                        f"<Message #{msg.id}: This is test msg one. Written by: testuser>")
-
-    def test_msg_like(self):
-        """Test that user added to message's likes list after liking"""
-
-        u = User.query.get(self.u_id)
-        u2 = User.query.get(self.u2_id)
-
-        u.liked_messages.append(self.test_msg2)
-        db.session.commit()
-        #test msg in/not in user's liked_messages
-        self.assertIn(self.test_msg2, u.liked_messages)
-        self.assertNotIn(self.test_msg2, u2.liked_messages)
-        #test user is in/not in message's users_liked
-        self.assertIn(u, self.test_msg2.users_liked)
-        self.assertNotIn(u2, self.test_msg2.users_liked)
-
-    def test_msg_delete(self):
-        """tests only one message is removed on deletion"""
-
-        u = User.query.get(self.u_id)
-        u2 = User.query.get(self.u2_id)
-
-        u.messages.append(
-            Message(text="This is test msg three.")
+        m = Message(
+            text="a warble",
+            user_id=self.uid
         )
 
-        db.session.delete(self.test_msg1)
+        db.session.add(m)
         db.session.commit()
 
-        self.assertTrue(len(u.messages), 1)
-        #tests u2 not affected by u msg delete
-        self.assertTrue(len(u2.messages), 1)
+        # User should have 1 message
+        self.assertEqual(len(self.u.messages), 1)
+        self.assertEqual(self.u.messages[0].text, "a warble")
 
+    def test_message_likes(self):
+        m1 = Message(
+            text="a warble",
+            user_id=self.uid
+        )
 
+        m2 = Message(
+            text="a very interesting warble",
+            user_id=self.uid
+        )
 
+        u = User.signup("yetanothertest", "t@email.com", "password", None)
+        uid = 888
+        u.id = uid
+        db.session.add_all([m1, m2, u])
+        db.session.commit()
 
+        u.liked_messages.append(m1)
+
+        db.session.commit()
+
+        l = Like.query.filter(Like.user_id == uid).all()
+        self.assertEqual(len(l), 1)
+        self.assertEqual(l[0].message_id, m1.id)

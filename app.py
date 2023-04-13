@@ -1,12 +1,16 @@
 import os
+from dotenv import load_dotenv
+
 from flask import Flask, render_template, request, flash, redirect, session, g
+# from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
+
 from forms import CSRFProtectForm, UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, User, Message
-#from flask_debugtoolbar import DebugToolbarExtension
 
 CURR_USER_KEY = "curr_user"
 
+load_dotenv()
 app = Flask(__name__)
 
 # Get DB_URI from environ variable (useful for production/testing) or,
@@ -67,7 +71,8 @@ def signup():
     If the there already is a user with that username: flash message
     and re-present form.
     """
-
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
     form = UserAddForm()
 
     if form.validate_on_submit():
@@ -141,7 +146,7 @@ def list_users():
     if not search:
         users = User.query.all()
     else:
-        #case sensitive
+        # case sensitive
         users = User.query.filter(User.username.like(f"%{search}%")).all()
 
     return render_template('users/index.html', users=users)
@@ -207,7 +212,6 @@ def users_followers(user_id: int) -> str:
 
     user = User.query.get_or_404(user_id)
     return render_template('users/followers.html', user=user)
-
 
 
 @app.get('/users/<int:user_id>/liked-messages')
@@ -478,11 +482,11 @@ def homepage():
         If the user is not logged in, returns a template that does not display messages.
     """
     if g.user:
-        user_ids = [ user.id for user in g.user.following ]
+        user_ids = [user.id for user in g.user.following]
         user_ids.append(g.user.id)
         messages = (Message
                     .query
-                    .filter( Message.user_id.in_(user_ids) )
+                    .filter(Message.user_id.in_(user_ids))
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
