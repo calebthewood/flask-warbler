@@ -34,8 +34,8 @@ class UserEditForm(FlaskForm):
 class LoginForm(FlaskForm):
     """Login form"""
 
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[Length(min=6)])
+    username = StringField('Enter "test_user" for test', validators=[DataRequired()])
+    password = PasswordField('Enter "password" for test', validators=[Length(min=6)])
 
 class CSRFProtectForm(FlaskForm):
     """CSRF Form"""
