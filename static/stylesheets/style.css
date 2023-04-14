@@ -12,9 +12,9 @@ body.error-404 {
   margin-bottom: 20px;
 }
 
-/* .btn {
+.btn {
   border-radius: 50px;
-} */
+}
 
 .btn:hover {
   cursor: pointer;
@@ -165,7 +165,8 @@ nav form.navbar-form {
 }
 
 .onboarding {
-  background-color: #fff;
+  background-color: #262D35;
+  color: #fff;
 }
 
 @media (max-width: 468px) {
