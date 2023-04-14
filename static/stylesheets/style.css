@@ -12,9 +12,9 @@ body.error-404 {
   margin-bottom: 20px;
 }
 
-.btn {
+/* .btn {
   border-radius: 50px;
-}
+} */
 
 .btn:hover {
   cursor: pointer;
@@ -35,6 +35,7 @@ a #logout {
 a #logout:hover {
   text-decoration: underline;
 }
+
 /* ======================= Nav */
 
 .navbar {
@@ -52,14 +53,14 @@ a #logout:hover {
   font-weight: bold;
 }
 
-.navbar .btn{
+.navbar .btn {
   color: #66757f;
   font-size: 13px;
   font-weight: bold;
 }
 
-.navbar .btn:hover{
- color: #1c94e0;
+.navbar .btn:hover {
+  color: #1c94e0;
 }
 
 .navbar a:hover {
@@ -71,7 +72,7 @@ a #logout:hover {
   align-items: center;
 }
 
-.navbar-brand > img {
+.navbar-brand>img {
   display: inline-block;
   margin-bottom: 2px;
   margin-right: 5px;
@@ -79,7 +80,7 @@ a #logout:hover {
   border-radius: 2px;
 }
 
-.nav > li > a > img {
+.nav>li>a>img {
   width: 32px;
   border-radius: 32px;
 }
@@ -107,7 +108,7 @@ nav form.navbar-form {
   box-sizing: border-box;
 }
 
-#search.form-control + .btn {
+#search.form-control+.btn {
   position: absolute;
   right: 9px;
   top: 2px;
@@ -117,8 +118,8 @@ nav form.navbar-form {
   color: #66757f;
 }
 
-#search.form-control + .btn:active,
-#search.form-control + .btn:focus {
+#search.form-control+.btn:active,
+#search.form-control+.btn:focus {
   box-shadow: none;
 }
 
@@ -133,7 +134,7 @@ nav form.navbar-form {
    a background color.
  */
 
-.onboarding > .navbar {
+.onboarding>.navbar {
   background-image: url("/static/images/nav-bg.png");
   background-size: 100% 100%;
 }
@@ -155,11 +156,11 @@ nav form.navbar-form {
   right: 16px;
 }
 
-.onboarding > .navbar a {
+.onboarding>.navbar a {
   color: #fff;
 }
 
-.onboarding > .navbar form.navbar-form {
+.onboarding>.navbar form.navbar-form {
   display: none;
 }
 
@@ -173,7 +174,7 @@ nav form.navbar-form {
   }
 }
 
-nav + .container {
+nav+.container {
   margin-bottom: 1rem;
 }
 
@@ -248,12 +249,12 @@ nav + .container {
   align-items: center;
 }
 
-.user-stats > .ms-auto {
+.user-stats>.ms-auto {
   display: flex;
   align-items: center;
 }
 
-.user-stats > .ms-auto .btn {
+.user-stats>.ms-auto .btn {
   min-width: 105px;
   padding: 6px 16px;
 }
@@ -266,7 +267,7 @@ nav + .container {
   line-height: 1;
 }
 
-.stat > .small {
+.stat>.small {
   color: #657786;
   font-weight: bold;
   font-size: 12px;
@@ -274,7 +275,7 @@ nav + .container {
   margin-bottom: 0;
 }
 
-.stat > .small + h4 {
+.stat>.small+h4 {
   font-size: 18px;
   font-weight: bold;
   padding-top: 3px;
@@ -351,7 +352,7 @@ nav + .container {
   margin-top: 20px;
 }
 
-.user-card > div {
+.user-card>div {
   position: absolute;
   background: white;
 }
@@ -391,7 +392,7 @@ nav + .container {
   margin-left: 10px;
 }
 
-.card-link > p {
+.card-link>p {
   position: absolute;
 }
 
@@ -427,58 +428,87 @@ p.card-bio {
 .home-hero {
   height: 100vh;
   display: flex;
-  justify-content: center;
-  flex-direction: column;
+  justify-content: space-around;
+  flex-direction: row;
   align-items: center;
   position: absolute;
   top: 0;
   width: 100vw;
   left: 0;
   z-index: -1;
-  background-image: url("/static/images/signed-out-home.jpg");
+  /* background-image: url("/static/images/cerulean-warbler.png");
   background-size: cover;
-  background-position: center center;
+  background-position: center center; */
+  background-color: black;
   color: #fff;
-  text-align: center;
+  text-align: left;
   padding: 1rem;
-  text-shadow: 0 0 8px #66757f;
+  /* text-shadow: 0 0 8px #66757f; */
 }
 
-.home-hero .btn {
+@media (max-width: 767px) {
+  .home-hero {
+    flex-direction: column;
+  }
+
+  .hero-img {
+    display: block;
+    order: 1;
+    margin-top: 50px;
+  }
+
+  .hero-content {
+    order: 2;
+  }
+}
+
+.hero-img {
+  display: inline-block;
+  background-image: url("/static/images/cerulean-warbler.png");
+  background-size: cover;
+  background-position: center center;
+  height: 300px;
+  width: 400px;
+  border-radius: 50px;
+  border: solid 4px black;
+  z-index: 1;
+}
+
+.hero-content .btn {
   text-shadow: none;
   position: relative;
   z-index: 1;
-  width: 150px;
+  width: 48%;
 }
 
-.home-hero h1 {
+.hero-content h1 {
   margin-bottom: 4rem;
 }
 
-.home-hero:before {
+.hero-content:before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(91, 112, 131, 0.4);
 }
 
 
 /* ============================== Signed in Home */
 
-#home-aside > .user-card {
+#home-aside>.user-card {
   margin-top: 0;
   overflow: hidden;
   min-height: fit-content;
 }
 
-#home-aside > .user-card .card-link {
+#home-aside>.user-card .card-link {
   display: flex;
 }
 
-#home-aside > .user-card .card-link > p {
+#home-aside>.user-card .card-link>p {
   margin-left: 0.5rem;
   margin-top: 0.25rem;
 }
@@ -487,16 +517,16 @@ p.card-bio {
   padding: 14px 0 7px;
 } */
 
-#home-aside > .user-card .user-stats {
+#home-aside>.user-card .user-stats {
   display: flex;
   justify-content: space-around;
 }
 
-#home-aside > .user-card > div {
+#home-aside>.user-card>div {
   width: 100%;
 }
 
-#home-aside .card-link > p {
+#home-aside .card-link>p {
   position: relative;
 }
 
@@ -519,7 +549,7 @@ p.card-bio {
   justify-content: space-between;
 }
 
-.edit-btn-area > .btn {
+.edit-btn-area>.btn {
   width: 48%;
 }
 
@@ -586,7 +616,7 @@ p.card-bio {
   color: white;
 }
 
-.message-404 > h4.display-4 {
+.message-404>h4.display-4 {
   font-size: 2.5em;
 }
 
@@ -608,7 +638,7 @@ button.like:hover .icon {
   fill: #0d6efd
 }
 
-button.unlike > .icon{
+button.unlike>.icon {
   fill: #0d6efd
 }
 
@@ -616,7 +646,7 @@ button.unlike > .icon{
   fill: #495057
 }
 
-button.delete:hover .icon{
+button.delete:hover .icon {
   fill: #dc3545;
 }
 
@@ -627,4 +657,3 @@ button.follow:hover .icon {
 button.unfollow:hover .icon {
   fill: #dc3545
 }
-
