@@ -88,33 +88,36 @@ I migrated the database from a Heroku Hobby Dyno to an RDS instance. I revamped 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-The following commands will work to setup project on mac zsh command line:
-
+Clone GitHub Repo
 ```
 $ git clone https://github.com/calebthewood/flask-warbler.git
 ```
+
 Create a .env file to hold configuration:
 ```
 SECRET_KEY=abc123
 DATABASE_URL=postgresql:///warbler
 ```
+Create a Python virtual environment and install dependencies in local dir
 ```
 $ python3 -m venv venv
 $ source venv/bin/activate
 (venv) $ pip install -r requirements.txt
 ```
-
+Create Postgres database in PSQL
 ```
 $ psql
   CREATE DATABASE warbler
   (ctrl-d to exit psql)
 ```
+Load env variables
 ```
 (venv) $ ipython
 In [1]: from dotenv import load_dotenv
 In [1]: load_dotenv()  # take environment variables from .env.
 In [1]: %run seed.py
 ```
+Run server on local host port 5001
 ```
 (venv) $ flask run -p 5001
 ```
@@ -170,7 +173,7 @@ See the [open issues](https://github.com/calebthewood/flask-warbler/issues) for 
 ## Contact
 
 I'm Caleb, Web Developer and Fullstack Enginner. Questions?
-- I post daily on twitter: [@calebthewood](https://twitter.com/calebthewood)
+- On twitter at [@calebthewood](https://twitter.com/calebthewood)
 - Personal Site: [calebwood.dev](https://www.calebwood.dev/)
 - email: calebwood.cs@gmail.com
 
